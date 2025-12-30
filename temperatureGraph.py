@@ -4,6 +4,7 @@ MAX_DATA_POINTS = 100
 import serial
 import time
 
+
 ser = serial.Serial('/dev/tty.usbmodem2101', 9600, timeout=1)
 time.sleep(2)
 
@@ -28,6 +29,14 @@ if command == '3':
     while True:
         buzzer_raw = ser.readline()
         temp_raw = ser.readline()
+        # write this data point to file
+        # timestamp, buzzer state, temperature
+        with open("temperature_data.txt", "a") as f:
+            if buzzer_raw and temp_raw:
+                buzzer_csv = buzzer_raw.decode().strip()
+                temp_csv = temp_raw.decode().strip()
+                f.write(f"{time.time()},{buzzer_csv},{temp_csv}\n")
+
         if buzzer_raw and temp_raw:
             buzzer_str = buzzer_raw.decode().strip()
             temp_str = temp_raw.decode().strip()
