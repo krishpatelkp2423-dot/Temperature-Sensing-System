@@ -7,6 +7,7 @@ import time
 ser = serial.Serial('/dev/tty.usbmodem2101', 9600, timeout=1)
 time.sleep(2)
 
+print("Mode 1: Real-time Temperature Display Mode 2: Buzzer Control Mode 3: Data Logging Mode ")
 user_data = input("Enter Mode: ")
 command = user_data
 ser.write(command.encode()) 
@@ -19,9 +20,11 @@ if command == '3':
     start_time = time.time()
     fig, ax = plt.subplots()
     temp_line, = ax.plot([], [])
-    buzzer_line, = ax.plot([], [])
+    ax1 = ax.twinx()
+    buzzer_line, = ax1.plot([], [])
     ax.set_xlabel("Time (s)")
-    ax.set_ylabel("Temperature (°F) and Buzzer State (0 [OFF], 1 [ON])")
+    ax.set_ylabel("Temperature (°F)")
+    ax1.set_ylabel("Buzzer State (1=ON, 0=OFF)")
     while True:
         buzzer_raw = ser.readline()
         temp_raw = ser.readline()
